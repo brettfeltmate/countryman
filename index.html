@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="">
+<head>
+    <meta charset="UTF-8">
+    <title>Mini Countryman & SR compatability</title>
+    <link rel="shortcut icon" type="image/png" href="../lib/klein.favicon.png">
+    <script
+            src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+            crossorigin="anonymous">
+    </script>
+    <script src="js/jspsych/jspsych.js"></script>
+    <script src = 'js/utilities.js'></script>
+    <script src = 'js/KLect.js'></script>
+    <script src = 'js/config/spawn_trials.js'></script>
+    <script src = 'js/config/params.js'></script>
+    <script src = 'js/config/instructions.js'></script>
+    <script src = 'js/pixi.min.js'></script>
+
+    <script src = 'js/jspsych/plugins/trial.js'></script>
+    <script src = 'js/jspsych/plugins/jspsych-html-keyboard-response.js'></script>
+    <script src = 'js/jspsych/plugins/jspsych-fullscreen.js'></script>
+    <script src = 'js/jspsych/plugins/jspsych-instructions.js'></script>
+    <script src = 'js/jspsych/plugins/jspsych-survey-text.js'></script>
+    <link href="css/jspsych.css" rel="stylesheet" type="text/css"/>
+    <link href="css/project.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+
+<script>
+    let honk = new Audio('aud/honk.wav')
+
+    // Aggregate paths to stimulus images
+    // These will eventually be passed to PIXI to preload prior to initiating the experiment
+    const image_names = [
+        "fixation",
+        "sign_congruent_left", 'sign_incongruent_left', 'sign_neutral_left',
+        "sign_congruent_right", 'sign_incongruent_right', 'sign_neutral_right',
+        "signal_congruent_left", 'signal_incongruent_left', 'signal_neutral_left',
+        "signal_congruent_right", 'signal_incongruent_right', 'signal_neutral_right'
+    ];
+
+    let image_set = [];
+    image_names.forEach(img => image_set.push(
+        {
+            id: img,
+            src: '../images' + '/' + img + '.png'
+        }
+    ));
+
+    // Init repo to store trial data
+    let data_repo = [];
+
+    // Populated during demographics collection
+    let demographics = {
+        participant: 'NA',
+        age: 'NA',
+        sex: 'NA',
+        hand: 'NA'
+    }
+
+    // trial mappings
+    let trial = {
+        type: 'trial',
+        fixation_duration: jsPsych.timelineVariable('fixation_duration'),
+        response_window: jsPsych.timelineVariable('response_window'),
+        block: jsPsych.timelineVariable('block'),
+        stimulus_type: jsPsych.timelineVariable('stimulus_type'),
+        stimulus_compatibility: jsPsych.timelineVariable('stimulus_compatibility'),
+        stimulus_directionality: jsPsych.timelineVariable('stimulus_directionality'),
+        response_keys: jsPsych.timelineVariable('response_keys')
+    }
+
+    // spawn blocks
+    let first_block = {
+        timeline: [trial],
+        timeline_variables: spawn_trials(block_order[0])
+    }
+    let second_block = {
+        timeline: [trial],
+        timeline_variables: spawn_trials(block_order[1])
+    }
+    let mixed_block = {
+        timeline: [trial],
+        timeline_variables: spawn_trials(block_order[2])
+    }
+
+    // Fullscreen controllers
+    let fullscreen_on = {type: 'fullscreen', fullscreen_mode: true}
+    let fullscreen_off = {type: 'fullscreen', fullscreen_mode: false}
+
+    // Instruction pages
+    let general_instrux = {
+        type: 'instructions',
+        pages: instruction_text['general'],
+        show_clickable_nav: false,
+        key_forward: "space",
+        on_finish: function() {
+            document.documentElement.style.cursor = 'none';
+        }
+    }
+
+    let first_block_instrux = {
+        type: 'instructions',
+        pages: instruction_text[block_order[0]],
+        show_clickable_nav: false,
+        key_forward: "space",
+        on_finish: function() {
+            document.documentElement.style.cursor = 'none';
+        }
+    }
+
+    let second_block_instrux = {
+        type: 'instructions',
+        pages: instruction_text[block_order[1]],
+        show_clickable_nav: false,
+        key_forward: "space",
+        on_finish: function() {
+            document.documentElement.style.cursor = 'none';
+        }
+    }
+
+    let mixed_block_instrux = {
+        type: 'instructions',
+        pages: instruction_text[block_order[2]],
+        show_clickable_nav: false,
+        key_forward: "space",
+        on_finish: function() {
+            document.documentElement.style.cursor = 'none';
+        }
+    }
+
+    let collect_demographics = {
+        type: 'survey-text',
+        questions: [
+            {name: 'participant', prompt: 'Please enter the ID code provided to you.'},
+            {name: 'age', prompt: 'Please enter your age.'},
+            {name: 'sex', prompt: 'Please enter your sex (male, female, non-binary).'},
+            {name: 'hand', prompt: 'Please enter your handedness (right, left, ambidextrous)'}
+        ],
+        on_finish: function() {
+            let ind = jsPsych.data.get().count()-1;
+            demographics.participant = get_demographic(ind, 'participant');
+            demographics.age = get_demographic(ind, 'age');
+            demographics.sex = get_demographic(ind, 'sex');
+            demographics.hand = get_demographic(ind, 'hand');
+        }
+    }
+
+    // Closing screen
+    let end_screen = {
+        type: 'html-keyboard-response',
+        stimulus: `You have completed the experiment.<br>` +
+            `Press any key now to exit fullscreen.<br>` +
+            `Please wait a moment before closing this window to ensure your data was uploaded.`,
+        choices: jsPsych.ALL_KEYS
+    }
+
+    let experiment_timeline = [
+        fullscreen_on,
+        collect_demographics,
+        general_instrux,
+        first_block_instrux,
+        first_block,
+        second_block_instrux,
+        second_block,
+        mixed_block_instrux,
+        mixed_block,
+        end_screen,
+        fullscreen_off
+    ]
+
+    function run_experiment() {
+        jsPsych.init({
+            timeline: experiment_timeline,
+            on_finish: function() {
+                document.documentElement.style.cursor = 'auto';
+                data_repo.forEach(function (row) {
+                    row.participant = demographics.participant;
+                    row.age = demographics.age;
+                    row.sex = demographics.sex;
+                    row.hand = demographics.hand;
+                })
+                KLect.send('klein', 'fiona_burns-hemingway', 'countryman', 'fiona.bh@dal.ca', '../..', data_repo)
+            }
+        })
+    }
+
+    async function preload(images, oncomplete) {
+        for (let i=0; i < images.length; i++) {
+            PIXI.Loader.shared.add(images[i].id, images[i].src)
+        }
+
+        PIXI.Loader.shared.on('complete', () => oncomplete())
+        PIXI.Loader.shared.load()
+    }
+
+    preload(image_set, run_experiment)
+
+
+
+
+
+
+
+</script>
+
+</body>
+</html>
