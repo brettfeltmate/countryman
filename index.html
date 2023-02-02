@@ -18,6 +18,7 @@
     <script src = 'js/pixi.min.js'></script>
 
     <script src = 'js/jspsych/plugins/trial.js'></script>
+    <script src = 'js/jspsych/plugins/sound-check.js'></script>
     <script src = 'js/jspsych/plugins/jspsych-html-keyboard-response.js'></script>
     <script src = 'js/jspsych/plugins/jspsych-fullscreen.js'></script>
     <script src = 'js/jspsych/plugins/jspsych-instructions.js'></script>
@@ -44,7 +45,7 @@
     image_names.forEach(img => image_set.push(
         {
             id: img,
-            src: '../images' + '/' + img + '.png'
+            src: '../images/' + img + '.png'
         }
     ));
 
@@ -69,6 +70,11 @@
         stimulus_compatibility: jsPsych.timelineVariable('stimulus_compatibility'),
         stimulus_directionality: jsPsych.timelineVariable('stimulus_directionality'),
         response_keys: jsPsych.timelineVariable('response_keys')
+    }
+
+    let sound_check = {
+        type: 'sound-check',
+        stimulus: "./aud/honk.wav"
     }
 
     // spawn blocks
@@ -159,6 +165,7 @@
     let experiment_timeline = [
         fullscreen_on,
         collect_demographics,
+        sound_check,
         general_instrux,
         first_block_instrux,
         first_block,
@@ -196,12 +203,6 @@
     }
 
     preload(image_set, run_experiment)
-
-
-
-
-
-
 
 </script>
 

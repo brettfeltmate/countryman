@@ -1,5 +1,5 @@
-// how many reps of full design
-const factorial_reps = 1
+// how many reps of full design (within a block)
+const factorial_reps = 15
 
 // trial variables
 const fixation_duration = 500; // time (ms) between fix & target
