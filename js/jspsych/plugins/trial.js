@@ -51,7 +51,7 @@ jsPsych.plugins['trial'] = (function() {
             setTimeout(function() {
                 // image replacement
                 $('#stimulus').css('background-image',
-                    'url("../images/' +
+                    'url("./images/' +
                     `${plugin.params.stimulus_type}` + '_' +
                     `${plugin.params.stimulus_compatibility}` + '_' +
                     `${plugin.params.stimulus_directionality}` +
@@ -140,12 +140,9 @@ jsPsych.plugins['trial'] = (function() {
         let display = $('<div />').addClass('stimulus').attr('id', 'stimulus')
         $(display_element).append(display)
 
-        // Trials self-started via spacebar
-        $(document).on("keypress", function(e) {
-            if (e.which === 32) {
-                plugin.run_trial()
-            }
-        })
+        // Delay start of trial by a smidge to ensure initial image is loaded
+        setTimeout(function() {plugin.run_trial()}, 50)
+
     }
     return plugin;
 })();
