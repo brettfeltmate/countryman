@@ -55,6 +55,7 @@
 
     // Populated during demographics collection
     let demographics = {
+        //participant: jsPsych.data.urlVaribles()['sona_id'],
         participant: 'NA',
         age: 'NA',
         sex: 'NA',
@@ -160,6 +161,7 @@
         ],
         on_finish: function() {
             let ind = jsPsych.data.get().count()-1;
+            // remove the below line if/when changed to an "online" experiment
             demographics.participant = get_demographic(ind, 'participant');
             demographics.age = get_demographic(ind, 'age');
             demographics.sex = get_demographic(ind, 'sex');
@@ -213,7 +215,7 @@
     function run_experiment() {
         jsPsych.init({
             timeline: experiment_timeline,
-            on_finish: function() {
+            on_finish: function(data) {
                 document.documentElement.style.cursor = 'auto';
                 data_repo.forEach(function (row) {
                     row.participant = demographics.participant;
@@ -222,7 +224,10 @@
                     row.hand = demographics.hand;
                     row.consented_as = demographics.consented_as;
                 })
-                KLect.send('klein', 'fiona_burns-hemingway', 'countryman', 'fiona.bh@dal.ca', '../..', data_repo)
+                KLect.send('klein', 'fiona_burns-hemingway', 'countryman', 'fiona.bh@dal.ca', '../..', data_repo);
+                // replace URL with SONA URL if moved to "online" testing
+                //window.location.assign("https://yourschool.sona-systems.com/webstudy_credit.aspx?experiment_id=123&credit_token=4e48f9b638a&survey_code="+sona_id)
+
             }
         })
     }
