@@ -23,6 +23,7 @@
     <script src = 'js/jspsych/plugins/jspsych-fullscreen.js'></script>
     <script src = 'js/jspsych/plugins/jspsych-instructions.js'></script>
     <script src = 'js/jspsych/plugins/jspsych-survey-text.js'></script>
+    <script src = 'js/jspsych/plugins/jspsych-survey-html-form.js'></script>
     <link href="css/jspsych.css" rel="stylesheet" type="text/css"/>
     <link href="css/project.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -57,7 +58,8 @@
         participant: 'NA',
         age: 'NA',
         sex: 'NA',
-        hand: 'NA'
+        hand: 'NA',
+        consented_as: 'NA'
     }
 
     // trial mappings
@@ -174,7 +176,20 @@
         choices: jsPsych.ALL_KEYS
     }
 
+    let consent = {
+        type: 'survey-html-form',
+        preamble: '<embed src="./consent.pdf" width="800" height="500" type="application/pdf">',
+        html: '<p>Please read the above form. If you have any questions about what it says, please direct them towards the contact info listed in the form.<br><br>If you consent to participate, please indicate (type) whether you would like to be a <b>participant</b> or <b>observer</b> in the box below, and then click continue to proceed.<br><br> <input name="consent" type="text" /><br><br>If you do not consent to participate, you may close this window.</p>',
+        on_finish: function() {
+            let ind = jsPsych.data.get().count()-1;
+            demographics.consented_as = get_demographic(ind, 'consent')
+        }
+    };
+
+
+
     let experiment_timeline = [
+        consent,
         fullscreen_on,
         collect_demographics,
         sound_check,
@@ -187,15 +202,15 @@
         third_block,
         second_task_instrux,
         fourth_block,
-        mixed_block_instrux,
+        mixed_task_instrux,
         first_mixed_block,
-        mixed_block_instrux,
+        mixed_task_instrux,
         second_mixed_block,
         end_screen,
         fullscreen_off
     ]
 
-    function run_experiment() {
+    //function run_experiment() {
         jsPsych.init({
             timeline: experiment_timeline,
             on_finish: function() {
@@ -205,22 +220,23 @@
                     row.age = demographics.age;
                     row.sex = demographics.sex;
                     row.hand = demographics.hand;
+                    row.consented_as = demographics.consented_as;
                 })
                 KLect.send('klein', 'fiona_burns-hemingway', 'countryman', 'fiona.bh@dal.ca', '../..', data_repo)
             }
         })
-    }
+    //}
 
-    async function preload(images, oncomplete) {
-        for (let i=0; i < images.length; i++) {
-            PIXI.Loader.shared.add(images[i].id, images[i].src)
-        }
+    // async function preload(images, oncomplete) {
+    //     for (let i=0; i < images.length; i++) {
+    //         PIXI.Loader.shared.add(images[i].id, images[i].src)
+    //     }
 
-        PIXI.Loader.shared.on('complete', () => oncomplete())
-        PIXI.Loader.shared.load()
-    }
+    //     PIXI.Loader.shared.on('complete', () => oncomplete())
+    //     PIXI.Loader.shared.load()
+    // }
 
-    preload(image_set, run_experiment)
+    // preload(image_set, run_experiment)
 
 </script>
 
