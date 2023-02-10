@@ -210,7 +210,7 @@
         fullscreen_off
     ]
 
-    //function run_experiment() {
+    function run_experiment() {
         jsPsych.init({
             timeline: experiment_timeline,
             on_finish: function() {
@@ -225,18 +225,18 @@
                 KLect.send('klein', 'fiona_burns-hemingway', 'countryman', 'fiona.bh@dal.ca', '../..', data_repo)
             }
         })
-    //}
+    }
 
-    // async function preload(images, oncomplete) {
-    //     for (let i=0; i < images.length; i++) {
-    //         PIXI.Loader.shared.add(images[i].id, images[i].src)
-    //     }
+    async function preload(images, oncomplete) {
+        for (let i=0; i < images.length; i++) {
+            PIXI.Loader.shared.add(images[i].id, images[i].src)
+        }
 
-    //     PIXI.Loader.shared.on('complete', () => oncomplete())
-    //     PIXI.Loader.shared.load()
-    // }
+        PIXI.Loader.shared.on('complete', () => oncomplete())
+        PIXI.Loader.shared.load()
+    }
 
-    // preload(image_set, run_experiment)
+    preload(image_set, run_experiment)
 
 </script>
 
