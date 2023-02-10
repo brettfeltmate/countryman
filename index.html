@@ -86,7 +86,19 @@
         timeline: [trial],
         timeline_variables: spawn_trials(block_order[1])
     }
-    let mixed_block = {
+    let third_block = {
+        timeline: [trial],
+        timeline_variables: spawn_trials(block_order[0])
+    }
+    let fourth_block = {
+        timeline: [trial],
+        timeline_variables: spawn_trials(block_order[1])
+    }
+    let first_mixed_block = {
+        timeline: [trial],
+        timeline_variables: spawn_trials(block_order[2])
+    }
+    let second_mixed_block = {
         timeline: [trial],
         timeline_variables: spawn_trials(block_order[2])
     }
@@ -106,7 +118,7 @@
         }
     }
 
-    let first_block_instrux = {
+    let first_task_instrux = {
         type: 'instructions',
         pages: instruction_text[block_order[0]],
         show_clickable_nav: false,
@@ -116,7 +128,7 @@
         }
     }
 
-    let second_block_instrux = {
+    let second_task_instrux = {
         type: 'instructions',
         pages: instruction_text[block_order[1]],
         show_clickable_nav: false,
@@ -126,7 +138,7 @@
         }
     }
 
-    let mixed_block_instrux = {
+    let mixed_task_instrux = {
         type: 'instructions',
         pages: instruction_text[block_order[2]],
         show_clickable_nav: false,
@@ -167,12 +179,18 @@
         collect_demographics,
         sound_check,
         general_instrux,
-        first_block_instrux,
+        first_task_instrux,
         first_block,
-        second_block_instrux,
+        second_task_instrux,
         second_block,
+        first_task_instrux,
+        third_block,
+        second_task_instrux,
+        fourth_block,
         mixed_block_instrux,
-        mixed_block,
+        first_mixed_block,
+        mixed_block_instrux,
+        second_mixed_block,
         end_screen,
         fullscreen_off
     ]
