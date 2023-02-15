@@ -61,7 +61,7 @@ jsPsych.plugins["sound-check"] = ( function() {
         `<br>`+
         `<p>Press SPACE to hear the honk again!</p>` +
         '<br>' +
-        '<p>If you heard it, adjust the volume of the honk so that it is lound, but not uncomfortably so. Press SPACE every time you want to hear the honk while adjusting. It is important that the sound is not feeble and that you heard the honk loud and clear.</p>' +
+        '<p>If you heard it, adjust the volume of the honk so that it is loud, but not uncomfortably so. Press SPACE every time you want to hear the honk while adjusting. It is important that the sound is not feeble and that you heard the honk loud and clear.</p>' +
         '<br>' +
         '<p>Press ENTER after you finish adjusting the volume.</p>' +
         '<br>' +
