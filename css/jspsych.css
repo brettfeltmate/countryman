@@ -315,7 +315,7 @@
 .jspsych-display-element {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .jspsych-display-element:focus {
