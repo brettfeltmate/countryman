@@ -11,7 +11,7 @@
     </script>
     <script src="js/jspsych/jspsych.js"></script>
     <script src = 'js/utilities.js'></script>
-    <script src = '../KLect.js'></script>
+    <script src = '../lib/KLect.js'></script>
     <script src = 'js/config/spawn_trials.js'></script>
     <script src = 'js/config/params.js'></script>
     <script src = 'js/config/instructions.js'></script>
@@ -173,8 +173,8 @@
     let end_screen = {
         type: 'html-keyboard-response',
         stimulus: `You have completed the experiment.<br>` +
-            `Press any key now to exit fullscreen.<br>` +
-            `Please wait a moment before closing this window to ensure your data was uploaded.`,
+            `Press spacebar now to upload your data.<br>` +
+            `The next screen will tell you whether your data was successfully uploaded, please wait and read that message before closing this window.`,
         choices: jsPsych.ALL_KEYS
     }
 
@@ -189,6 +189,7 @@
     };
 
 
+    // TODO: check if pid is filled in case of non-SONA Ss
 
     let experiment_timeline = [
         consent,
